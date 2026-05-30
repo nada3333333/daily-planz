@@ -1,0 +1,50 @@
+/* ===== Indigo Color Scheme ===== */
+:root {
+    --indigo: #4f46e5;
+    --indigo-dark: #4338ca;
+    --indigo-light: #e0e7ff;
+}
+
+.bg-indigo {
+    background-color: var(--indigo) !important;
+}
+
+.btn-indigo {
+    background-color: var(--indigo);
+    border-color: var(--indigo);
+    color: white;
+}
+
+.btn-indigo:hover {
+    background-color: var(--indigo-dark);
+    border-color: var(--indigo-dark);
+    color: white;
+}
+
+.text-indigo {
+    color: var(--indigo) !important;
+}
+
+/* ===== Todo Done Style ===== */
+.todo-done {
+    background-color: #f8fdf8;
+}
+
+/* ===== Card hover ===== */
+.list-group-item {
+    transition: background-color 0.2s;
+}
+
+.list-group-item:hover {
+    background-color: #f5f3ff;
+}
+
+/* ===== Navbar brand ===== */
+.navbar-brand {
+    letter-spacing: 0.5px;
+}
+
+/* ===== Stats card ===== */
+.card {
+    border-radius: 12px;
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-indigo shadow-sm">
+    <div class="container">
+        <span class="navbar-brand fw-bold fs-4">
+            <i class="bi bi-check2-square me-2"></i>Todo App
+        </span>
+    </div>
+</nav>
+
+<div class="container py-4">
+
+    <!-- Flash Message -->
+    <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        <span th:text="${successMsg}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="card-body">
+                    <div class="fs-1 fw-bold text-indigo" th:text="${pending + completed}">0</div>
+                    <div class="text-muted small">Total des tâches</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="card-body">
+                    <div class="fs-1 fw-bold text-warning" th:text="${pending}">0</div>
+                    <div class="text-muted small">En cours</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center py-3">
+                <div class="card-body">
+                    <div class="fs-1 fw-bold text-success" th:text="${completed}">0</div>
+                    <div class="text-muted small">Complétées</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Formulaire Ajout -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-indigo text-white">
+                    <i class="bi bi-plus-circle me-2"></i><strong>Nouvelle tâche</strong>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/todos/add}" th:object="${newTodo}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Titre <span class="text-danger">*</span></label>
+                            <input type="text" th:field="*{title}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+                                   placeholder="Ex: Faire les courses">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}"
+                                 th:errors="*{title}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea th:field="*{description}" class="form-control" rows="3"
+                                      placeholder="Détails optionnels..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-indigo w-100">
+                            <i class="bi bi-plus-lg me-1"></i> Ajouter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des Tâches -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0"><i class="bi bi-list-task me-2 text-indigo"></i>Mes tâches</h5>
+                </div>
+                <div class="card-body p-0">
+
+                    <!-- Liste vide -->
+                    <div th:if="${#lists.isEmpty(todos)}" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        Aucune tâche pour l'instant. Ajoutez-en une !
+                    </div>
+
+                    <!-- Liste des tâches -->
+                    <ul class="list-group list-group-flush" th:unless="${#lists.isEmpty(todos)}">
+                        <li th:each="todo : ${todos}"
+                            class="list-group-item d-flex align-items-start gap-3 py-3"
+                            th:classappend="${todo.completed} ? 'todo-done'">
+
+                            <!-- Checkbox toggle -->
+                            <a th:href="@{/todos/toggle/{id}(id=${todo.id})}"
+                               class="btn btn-sm mt-1"
+                               th:classappend="${todo.completed} ? 'btn-success' : 'btn-outline-secondary'">
+                                <i class="bi" th:classappend="${todo.completed} ? 'bi-check-lg' : 'bi-circle'"></i>
+                            </a>
+
+                            <!-- Contenu -->
+                            <div class="flex-grow-1">
+                                <div class="fw-semibold"
+                                     th:text="${todo.title}"
+                                     th:classappend="${todo.completed} ? 'text-decoration-line-through text-muted'">
+                                </div>
+                                <div class="text-muted small" th:if="${todo.description != null and !todo.description.isEmpty()}"
+                                     th:text="${todo.description}"></div>
+                                <div class="text-muted" style="font-size: 0.75rem;" th:if="${todo.createdAt != null}">
+                                    <i class="bi bi-clock me-1"></i>
+                                    <span th:text="${#temporals.format(todo.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="d-flex gap-1">
+                                <a th:href="@{/todos/edit/{id}(id=${todo.id})}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a th:href="@{/todos/delete/{id}(id=${todo.id})}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Supprimer cette tâche ?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
