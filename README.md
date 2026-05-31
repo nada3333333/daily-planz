@@ -30,9 +30,10 @@ Application web de gestion de taches personnelles.
 ## URL de deploiement
 A completer apres deploiement
 
-## Identifiants de test
-- Email : test@dailyplanz.ma
-- Mot de passe : Test1234
+## Accès à l'application
+L'application ne nécessite pas d'authentification.
+Après le lancement du projet :
+http://localhost:8080
 
 ## Livrables anterieurs
 - Fiche Projet
