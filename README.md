@@ -30,10 +30,10 @@ Application web de gestion de taches personnelles.
 ## URL de deploiement
 A completer apres deploiement
 
-## Accès à l'application
-L'application ne nécessite pas d'authentification.
-Après le lancement du projet :
-http://localhost:8080
+## Identifiants de test
+
+Aucun identifiant n'est requis.
+Le site est accessible directement sans création de compte ni connexion.
 
 ## Livrables anterieurs
 - Fiche Projet
